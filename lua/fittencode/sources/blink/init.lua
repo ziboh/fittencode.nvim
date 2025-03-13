@@ -13,7 +13,7 @@ local blink = {}
 ---@return lsp.CompletionResponse?
 local function convert_to_lsp_completion_response(line, character, suggestions)
   local LABEL_LIMIT = 80
-  local text = character .. table.concat(suggestions, '\n')
+  local text = character .. suggestions[1]
   local first = character .. suggestions[1]
   local label = (#first > LABEL_LIMIT or #suggestions > 1) and string.sub(first, 1, LABEL_LIMIT - 3) .. '...' or first
   local items = {}
@@ -28,7 +28,7 @@ local function convert_to_lsp_completion_response(line, character, suggestions)
 end
 
 function blink:new()
-  require("blink.cmp.types").CompletionItemKind['FittenCode'] = 'FittenCode'
+  require('blink.cmp.types').CompletionItemKind['FittenCode'] = 'FittenCode'
   return setmetatable({}, { __index = blink })
 end
 
@@ -47,7 +47,7 @@ function blink:get_completions(context, callback)
       return
     end
     local line = context.line
-    local character = line:sub(context.bounds.start_col, context.bounds.end_col)
+    local character = line:sub(context.bounds.start_col, col)
     -- local info = {
     --   triggerCharacter = context.trigger.character,
     --   line = line,
